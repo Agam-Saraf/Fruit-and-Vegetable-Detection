@@ -8,8 +8,6 @@ import os.path
 
 app = Flask(__name__)
 
-#Articles = Articles()
-
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -41,14 +39,10 @@ def upload():
     newDes = os.path.join('test_images/'+filename)
     
     train_categories = []
-    # train_samples = []
     for i in os.listdir("./data/merged/train"):
         train_categories.append(i)
   
-    # model.load_weights("finalmodel.hdf5")
     img = Image.open(newDes)
-    original_img = np.array(img, dtype=np.uint8)
-    # plt.imshow(original_img)
 
     if img.size[0] > img.size[1]:
         scale = 100 / img.size[1]
@@ -62,8 +56,6 @@ def upload():
         new_size = (new_w, new_h)
 
     resized = img.resize(new_size)
-    resized_img = np.array(resized, dtype=np.uint8)
-    # plt.imshow(resized_img)
 
     left = 0
     right = left + 100
@@ -72,14 +64,11 @@ def upload():
     model = load_model('model.h5')
     cropped = resized.crop((left, up, right, down))
     cropped_img = np.array(cropped, dtype=np.uint8)
-    # plt.imshow(cropped_img)
 
     cropped_img = cropped_img / 255
     X = np.reshape(cropped_img, newshape=(1, cropped_img.shape[0], cropped_img.shape[1], cropped_img.shape[2]))
     prediction_multi = model.predict(x=X)
-    # print(np.argmax(prediction_multi))
     print("Fruit is : ", train_categories[np.argmax(prediction_multi)])
-    fruit_name = train_categories[np.argmax(prediction_multi)]
 
     acc_sort_index = np.argsort(prediction_multi)
     top_pred = acc_sort_index[:, -6:]
@@ -190,8 +179,6 @@ def upload():
     return render_template('about.html',results = results,y1 = fruit[1],y2 = fruit[3],y3 = fruit[5],
                             n1 = fruit[0],n2 = fruit[2],n3 = fruit[4],calorie = fruit[6],fat = fruit[7],
                             protein = fruit[8],carb = fruit[9],fibre = fruit[10])
-    #return (results, destination)
 
 if __name__ == '__main__':
-    #app.run(debug=True)
     app.run(port=5000, debug=True, use_reloader=False)
