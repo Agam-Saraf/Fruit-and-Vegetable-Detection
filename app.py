@@ -181,4 +181,4 @@ def upload():
                             protein = fruit[8],carb = fruit[9],fibre = fruit[10])
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True, use_reloader=False)
+    app.run(debug=True)
